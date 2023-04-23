@@ -1,26 +1,10 @@
-//axios import buraya gelecek
+import axios from 'axios';
 
-var benimIP;
-
+let benimIP;
 
 // ------------ değiştirmeyin --------------
-// licensed to Ergineer 2022
-require("babel-core/register");
-require("babel-polyfill");
-async function ipAdresimiAl(){
-	await axios({
-		method: 'get',
-		url: 'https://apis.ergineer.com/ipadresim',
-	})
-	.then(function (response) {
-		return response.data
-	})
-	.then(function (a) {
-		benimIP=a
-	});
-}				
+// licensed to Ergineer 2022			
 // ------------ değiştirmeyin --------------
-
 
 /*
 	ADIM 1: axios kullanarak, aşağıdaki URL'ye GET sorgusu atacağız
@@ -30,6 +14,7 @@ async function ipAdresimiAl(){
 	NOT: Bilgisayarın IP adresini öğrenmek için: https://apis.ergineer.com/ipadresim 
 	ADIM 5'e gelene kadar fonksiyonunuzu test etmek için ip nizi URL'ye manuel olarak ekleyebilirsiniz.
 */
+
 
 /*
 	ADIM 2: Geri döndürülen verileri inceleyin, bu sizin ip bilgileriniz! Bileşen fonksiyonunuzu geliştirmek içindeki bu veri yapısını
@@ -54,6 +39,7 @@ async function ipAdresimiAl(){
     </div>
 */
 
+  
 /*
 	ADIM 4: API'den alınan verileri kullanarak ADIM 3'te verilen yapıda bir kart oluşturun ve 
 	bu kartı DOM olarak .cards elementinin içine ekleyin. 
@@ -70,3 +56,77 @@ async function ipAdresimiAl(){
 
 
 //kodlar buraya gelecek
+
+require("babel-core/register");
+require("babel-polyfill");
+async function ipAdresimiAl(){
+	await axios({
+		method: 'get',
+		url: 'https://apis.ergineer.com/ipadresim',
+	})
+	.then(function (response) {
+		return response.data
+	})
+	.then(function (a) {
+		benimIP = a;
+	}); 
+}
+
+ipAdresimiAl();	
+const url = `https://apis.ergineer.com/ipgeoapi/${benimIP}`;
+
+axios.get(url)
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+
+function createCard(info) {
+	const card = document.createElement("div");
+	card.classList.add("card");
+  
+	const img = document.createElement("img");
+	img.src = info.flagUrl;
+  
+	const cardInfo = document.createElement("div");
+	cardInfo.classList.add("card-info");
+  
+	const ip = document.createElement("h3");
+	ip.classList.add("ip");
+	ip.textContent = info.ipAddress;
+  
+	const country = document.createElement("p");
+	country.classList.add("ulke");
+	country.textContent = `Ülke Bilgisi: (${info.countryCode})`;
+  
+	const location = document.createElement("p");
+	location.textContent = `Enlem: ${info.latitude} Boylam: ${info.longitude}`;
+  
+	const city = document.createElement("p");
+	city.textContent = `Şehir: ${info.city}`;
+  
+	const timezone = document.createElement("p");
+	timezone.textContent = `Saat Dilimi: ${info.timezone}`;
+  
+	const currency = document.createElement("p");
+	currency.textContent = `Para Birimi: ${info.currency}`;
+  
+	const isp = document.createElement("p");
+	isp.textContent = `ISP: ${info.isp}`;
+  
+	cardInfo.appendChild(ip);
+	cardInfo.appendChild(country);
+	cardInfo.appendChild(location);
+	cardInfo.appendChild(city);
+	cardInfo.appendChild(timezone);
+	cardInfo.appendChild(currency);
+	cardInfo.appendChild(isp);
+  
+	card.appendChild(img);
+	card.appendChild(cardInfo);
+  
+	return card;
+  }
